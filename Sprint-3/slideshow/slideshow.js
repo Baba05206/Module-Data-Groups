@@ -2,22 +2,23 @@ const images = [
   "./assets/cute-cat-a.png",
   "./assets/cute-cat-b.jpg",
   "./assets/cute-cat-c.jpg",
+  "./assets/cute-cat-d.png",
 ];
 
 //Write your code here
 let currentIndex = 0;
-let intervalId = null;
+let slideshowIntervalId = null;
 
-const imgElement = document.getElementById("carousel-img");
-const forwardBtn = document.getElementById("forward-btn");
-const backwardBtn = document.getElementById("backward-btn");
+const carouselImage = document.querySelector("#carousel-img");
+const forwardButton = document.querySelector("#forward-btn");
+const backwardButton = document.querySelector("#backward-btn");
 
-const autoForwardBtn = document.getElementById("auto-forward");
-const autoBackwardBtn = document.getElementById("auto-backward");
-const stopBtn = document.getElementById("stop");
+const autoForwardButton = document.querySelector("#auto-forward");
+const autoBackwardButton = document.querySelector("#auto-backward");
+const stopButton = document.querySelector("#stop");
 
 function updateImage() {
-  imgElement.src = images[currentIndex];
+  carouselImage.src = images[currentIndex];
 }
 
 function moveForward() {
@@ -30,32 +31,36 @@ function moveBackward() {
   updateImage();
 }
 
-forwardBtn.addEventListener("click", moveForward);
-backwardBtn.addEventListener("click", moveBackward);
+forwardButton.addEventListener("click", moveForward);
+backwardButton.addEventListener("click", moveBackward);
 
 // ---- AUTOMATIC SLIDESHOW ----
 
-function startAuto(direction) {
-  stopAuto(); // clear any previous interval
+function startAutoSlideshow(direction) {
+  stopAutoSlideshow(); // clear any previous interval
 
   // Disable auto buttons
-  autoForwardBtn.disabled = true;
-  autoBackwardBtn.disabled = true;
+  autoForwardButton.disabled = true;
+  autoBackwardButton.disabled = true;
 
-  intervalId = setInterval(() => {
+  slideshowIntervalId = setInterval(() => {
     direction === "forward" ? moveForward() : moveBackward();
   }, 2000);
 }
 
-function stopAuto() {
-  clearInterval(intervalId);
-  intervalId = null;
+function stopAutoSlideshow() {
+  clearInterval(slideshowIntervalId);
+  slideshowIntervalId = null;
 
   // Re-enable buttons
-  autoForwardBtn.disabled = false;
-  autoBackwardBtn.disabled = false;
+  autoForwardButton.disabled = false;
+  autoBackwardButton.disabled = false;
 }
 
-autoForwardBtn.addEventListener("click", () => startAuto("forward"));
-autoBackwardBtn.addEventListener("click", () => startAuto("backward"));
-stopBtn.addEventListener("click", stopAuto);
+autoForwardButton.addEventListener("click", () =>
+  startAutoSlideshow("forward")
+);
+autoBackwardButton.addEventListener("click", () =>
+  startAutoSlideshow("backward")
+);
+stopButton.addEventListener("click", stopAutoSlideshow);
