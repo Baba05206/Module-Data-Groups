@@ -169,4 +169,35 @@ describe("deleteCompleted()", () => {
 
     expect(todos).toHaveLength(0);
   });
+
+  test("Delete completed tasks from a mixed list where the last item is completed", () => {
+    const todos = [
+      { task: "Task 1", completed: false },
+      { task: "Task 2", completed: true },
+      { task: "Task 3", completed: false },
+      { task: "Task 4", completed: true },
+    ];
+
+    Todos.deleteCompleted(todos);
+
+    expect(todos).toHaveLength(2);
+    expect(todos[0]).toEqual({ task: "Task 1", completed: false });
+    expect(todos[1]).toEqual({ task: "Task 3", completed: false });
+  });
+
+  test("Delete completed tasks from a mixed list with consecutive completed tasks", () => {
+    const todos = [
+      { task: "Task 1", completed: false },
+      { task: "Task 2", completed: true },
+      { task: "Task 3", completed: true },
+      { task: "Task 4", completed: true },
+      { task: "Task 5", completed: false },
+    ];
+
+    Todos.deleteCompleted(todos);
+
+    expect(todos).toHaveLength(2);
+    expect(todos[0]).toEqual({ task: "Task 1", completed: false });
+    expect(todos[1]).toEqual({ task: "Task 5", completed: false });
+  });
 });
