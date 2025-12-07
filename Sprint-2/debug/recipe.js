@@ -10,6 +10,12 @@ const recipe = {
   ingredients: ["olive oil", "tomatoes", "salt", "pepper"],
 };
 
-console.log(`${recipe.title} serves ${recipe.serves}
-ingredients:
-${recipe.ingredients.join("\n")}`);
+console.log(`${recipe.title} serves ${recipe.serves}`);
+console.log("ingredients:");
+
+// Check if ingredients is an array
+if (Array.isArray(recipe.ingredients)) {
+  console.log(recipe.ingredients.join("\n"));
+} else {
+  console.log("No valid ingredient list available.");
+}

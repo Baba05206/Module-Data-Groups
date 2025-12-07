@@ -1,5 +1,5 @@
 function contains(object, propertyName) {
-  if (typeof object === "object" && object !== null) {
+  if (typeof object === "object" && object !== null && !Array.isArray(object)) {
     return propertyName in object;
   }
   return false;

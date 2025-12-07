@@ -12,4 +12,4 @@ const address = {
   postcode: "XYZ 123",
 };
 
-console.log(`My house number is ${address.houseNumber}`); // Objects are accessed using dot notation or string keys. Example address.houseNumber
+console.log(`My house number is ${address.houseNumber ?? "unknown"}`); // Objects are accessed using dot notation or string keys. Example address.houseNumber
