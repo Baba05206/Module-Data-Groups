@@ -23,6 +23,19 @@ const books = [
 function readingList() {
   const unorderedList = document.querySelector("#reading-list");
 
+  // Base condition: check if books array is empty
+  if (!books || books.length === 0) {
+    const emptyMessage = document.createElement("li");
+    emptyMessage.textContent =
+      "No books in your reading list yet. Add some books to get started!";
+    emptyMessage.style.listStyle = "none";
+    emptyMessage.style.padding = "20px";
+    emptyMessage.style.textAlign = "center";
+    emptyMessage.style.color = "#666";
+    unorderedList.appendChild(emptyMessage);
+    return; // Exit the function early
+  }
+
   for (const book of books) {
     const newList = document.createElement("li");
 
