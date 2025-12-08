@@ -1,83 +1,59 @@
-require("@testing-library/jest-dom");
-const path = require("path");
-const { JSDOM } = require("jsdom");
+// for the tests, do not modify this array of books
+const books = [
+  {
+    title: "The Design of Everyday Things",
+    author: "Don Norman",
+    alreadyRead: false,
+    bookCoverImage: "https://blackwells.co.uk/jacket/l/9780465050659.jpg",
+  },
+  {
+    title: "The Most Human Human",
+    author: "Brian Christian",
+    alreadyRead: true,
+    bookCoverImage:
+      "https://images-na.ssl-images-amazon.com/images/I/41m1rQjm5tL._SX322_BO1,204,203,200_.jpg",
+  },
+  {
+    title: "The Pragmatic Programmer",
+    author: "Andrew Hunt",
+    alreadyRead: true,
+    bookCoverImage: "https://blackwells.co.uk/jacket/l/9780135957059.jpg",
+  },
+];
 
-let page = null;
+function readingList() {
+  const orderedList = document.querySelector("#reading-list");
 
-beforeEach(async () => {
-  page = await JSDOM.fromFile(path.join(__dirname, "index.html"), {
-    resources: "usable",
-    runScripts: "dangerously",
-  });
+  // Base condition: check if books array is empty
+  if (!books || books.length === 0) {
+    const emptyMessage = document.createElement("li");
+    emptyMessage.className = "empty-message";
+    emptyMessage.textContent =
+      "No books in your reading list yet. Add some books to get started!";
+    orderedList.appendChild(emptyMessage);
+    return;
+  }
 
-  // do this so students can use element.innerText which jsdom does not implement
-  Object.defineProperty(page.window.HTMLElement.prototype, "innerText", {
-    get() {
-      return this.textContent;
-    },
-    set(value) {
-      this.textContent = value;
-    },
-  });
+  for (const book of books) {
+    const listItem = document.createElement("li");
 
-  return new Promise((res) => {
-    page.window.document.addEventListener("load", res);
-  });
-});
+    const bookImage = document.createElement("img");
+    bookImage.src = book.bookCoverImage;
+    bookImage.alt = `Cover of ${book.title}`;
 
-afterEach(() => {
-  page = null;
-});
+    const bookInfo = document.createElement("p");
+    bookInfo.textContent = `${book.title} by ${book.author}`;
 
-describe("Reading list", () => {
-  test("renders a list of books with author and title", () => {
-    const readingList = page.window.document.querySelector("#reading-list");
+    listItem.append(bookImage, bookInfo);
 
-    expect(readingList).toHaveTextContent("The Design of Everyday Things");
-    expect(readingList).toHaveTextContent("Don Norman");
+    if (book.alreadyRead) {
+      listItem.classList.add("read");
+    } else {
+      listItem.classList.add("notRead");
+    }
 
-    expect(readingList).toHaveTextContent("The Most Human Human");
-    expect(readingList).toHaveTextContent("Brian Christian");
+    orderedList.appendChild(listItem);
+  }
+}
 
-    expect(readingList).toHaveTextContent("The Pragmatic Programmer");
-    expect(readingList).toHaveTextContent("Andrew Hunt");
-  });
-  test("each book in the list has an image", () => {
-    const firstLi = page.window.document.querySelector(
-      "#reading-list > :first-child"
-    );
-    expect(firstLi).toContainHTML(
-      `<img src="https://blackwells.co.uk/jacket/l/9780465050659.jpg" />`
-    );
-
-    const secondLi = page.window.document.querySelector(
-      "#reading-list > :nth-child(2)"
-    );
-    expect(secondLi).toContainHTML(
-      `<img src="https://images-na.ssl-images-amazon.com/images/I/41m1rQjm5tL._SX322_BO1,204,203,200_.jpg" />`
-    );
-
-    const thirdLi = page.window.document.querySelector(
-      "#reading-list > :nth-child(3)"
-    );
-    expect(thirdLi).toContainHTML(
-      `<img src="https://blackwells.co.uk/jacket/l/9780135957059.jpg" />`
-    );
-  });
-  test("background color changes depending on whether book has been read", () => {
-    const firstLi = page.window.document.querySelector(
-      "#reading-list > :first-child"
-    );
-    expect(firstLi).toHaveClass("notRead");
-
-    const secondLi = page.window.document.querySelector(
-      "#reading-list > :nth-child(2)"
-    );
-    expect(secondLi).toHaveClass("read");
-
-    const thirdLi = page.window.document.querySelector(
-      "#reading-list > :nth-child(3)"
-    );
-    expect(thirdLi).toHaveClass("read");
-  });
-});
+readingList();

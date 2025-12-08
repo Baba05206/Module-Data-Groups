@@ -20,40 +20,46 @@ const books = [
     bookCoverImage: "https://blackwells.co.uk/jacket/l/9780135957059.jpg",
   },
 ];
+
 function readingList() {
-  const unorderedList = document.querySelector("#reading-list");
+  const orderedList = document.querySelector("#reading-list");
 
   // Base condition: check if books array is empty
   if (!books || books.length === 0) {
     const emptyMessage = document.createElement("li");
+    emptyMessage.className = "empty-message";
     emptyMessage.textContent =
       "No books in your reading list yet. Add some books to get started!";
-    emptyMessage.style.listStyle = "none";
-    emptyMessage.style.padding = "20px";
-    emptyMessage.style.textAlign = "center";
-    emptyMessage.style.color = "#666";
-    unorderedList.appendChild(emptyMessage);
-    return; // Exit the function early
+    orderedList.appendChild(emptyMessage);
+    return;
   }
 
   for (const book of books) {
-    const newList = document.createElement("li");
+    const listItem = document.createElement("li");
 
-    const newImage = document.createElement("img");
-    newImage.src = book.bookCoverImage;
+    const bookImage = document.createElement("img");
+    bookImage.src = book.bookCoverImage;
+    bookImage.alt = "Book cover for " + book.title;
 
-    const paragraph = document.createElement("p");
-    paragraph.textContent = `${book.title} by ${book.author}`;
+    const bookInfo = document.createElement("p");
+    bookInfo.textContent = book.title + " by " + book.author;
 
-    newList.append(paragraph, newImage);
+    const statusBadge = document.createElement("span");
+    statusBadge.className = "status-badge";
 
     if (book.alreadyRead) {
-      newList.classList.add("read");
+      listItem.classList.add("read");
+      statusBadge.textContent = "✓";
     } else {
-      newList.classList.add("notRead");
+      listItem.classList.add("notRead");
+      statusBadge.textContent = "○";
     }
 
-    unorderedList.appendChild(newList);
+    listItem.appendChild(bookImage);
+    listItem.appendChild(bookInfo);
+    listItem.appendChild(statusBadge);
+
+    orderedList.appendChild(listItem);
   }
 }
 
