@@ -4,6 +4,23 @@ const MILLISECONDS_PER_SECOND = 1000;
 
 let intervalId;
 
+/**
+ * Formats time in seconds to MM:SS format
+ * @param {number} totalSeconds - The time in seconds to format
+ * @returns {string} Formatted time string in "Time Remaining: MM:SS" format
+ */
+function formatTimeDisplay(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / SECONDS_PER_MINUTE);
+  const seconds = totalSeconds % SECONDS_PER_MINUTE;
+
+  return (
+    "Time Remaining: " +
+    String(minutes).padStart(2, "0") +
+    ":" +
+    String(seconds).padStart(2, "0")
+  );
+}
+
 function setAlarm() {
   const input = document.getElementById("alarmSet");
   const heading = document.getElementById("timeRemaining");
@@ -18,29 +35,22 @@ function setAlarm() {
 
   clearInterval(intervalId);
 
-  heading.innerText =
-    "Time Remaining: " +
-    String(Math.floor(totalSeconds / SECONDS_PER_MINUTE)).padStart(2, "0") +
-    ":" +
-    String(totalSeconds % SECONDS_PER_MINUTE).padStart(2, "0");
+  heading.innerText = formatTimeDisplay(totalSeconds);
 
   intervalId = setInterval(() => {
     totalSeconds--;
 
     if (totalSeconds <= 0) {
-      heading.innerText = "Time Remaining: 00:00";
+      heading.innerText = formatTimeDisplay(0);
       clearInterval(intervalId);
       playAlarm();
       return;
     }
 
-    heading.innerText =
-      "Time Remaining: " +
-      String(Math.floor(totalSeconds / SECONDS_PER_MINUTE)).padStart(2, "0") +
-      ":" +
-      String(totalSeconds % SECONDS_PER_MINUTE).padStart(2, "0");
+    heading.innerText = formatTimeDisplay(totalSeconds);
   }, MILLISECONDS_PER_SECOND);
 }
+
 // DO NOT EDIT BELOW HERE
 
 var audio = new Audio("alarmsound.mp3");
