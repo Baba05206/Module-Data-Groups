@@ -6,8 +6,6 @@ let intervalId;
 
 /**
  * Formats time in seconds to MM:SS format
- * @param {number} totalSeconds - The time in seconds to format
- * @returns {string} Formatted time string in "Time Remaining: MM:SS" format
  */
 function formatTimeDisplay(totalSeconds) {
   const minutes = Math.floor(totalSeconds / SECONDS_PER_MINUTE);
@@ -24,15 +22,35 @@ function formatTimeDisplay(totalSeconds) {
 function setAlarm() {
   const input = document.getElementById("alarmSet");
   const heading = document.getElementById("timeRemaining");
+  const errorMsg = document.getElementById("alarmError");
 
-  let totalSeconds = Number(input.value);
+  // Reset alarm sound + flashing background before new countdown
+  pauseAlarm();
 
-  // Input validation: check for invalid or non-positive numbers
-  if (isNaN(totalSeconds) || totalSeconds <= 0) {
-    heading.innerText = "Please enter a valid positive number of seconds";
+  let raw = input.value.trim();
+
+  // Clear previous error
+  errorMsg.textContent = "";
+
+  // STRONG VALIDATION: must be digits only
+  if (!/^\d+$/.test(raw)) {
+    heading.innerText = "Time Remaining: 00:00";
+    errorMsg.textContent =
+      "Invalid input. Please enter a whole number of seconds (e.g., 10, 30, 120). Decimals and text are not allowed.";
     return;
   }
 
+  let totalSeconds = Number(raw);
+
+  // Prevent extremely large or zero values
+  if (totalSeconds === 0 || totalSeconds > 86400) {
+    heading.innerText = "Time Remaining: 00:00";
+    errorMsg.textContent =
+      "Please enter a value between 1 and 86,400 seconds. Examples: 10, 45, 300.";
+    return;
+  }
+
+  // Reset any existing countdown
   clearInterval(intervalId);
 
   heading.innerText = formatTimeDisplay(totalSeconds);
@@ -63,14 +81,21 @@ function setup() {
   document.getElementById("stop").addEventListener("click", () => {
     pauseAlarm();
   });
+
+  // Allow Enter key to trigger alarm
+  document.getElementById("alarmSet").addEventListener("keyup", (e) => {
+    if (e.key === "Enter") setAlarm();
+  });
 }
 
 function playAlarm() {
   audio.play();
+  document.body.classList.add("alarm-active");
 }
 
 function pauseAlarm() {
   audio.pause();
+  document.body.classList.remove("alarm-active");
 }
 
 window.onload = setup;

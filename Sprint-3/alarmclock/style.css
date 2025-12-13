@@ -2,8 +2,8 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 #alarmSet {
@@ -12,4 +12,34 @@
 
 h1 {
   text-align: center;
+}
+
+/* Visible, helpful error message */
+.error-message {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  min-height: 1.2rem; /* Prevent layout shift */
+}
+
+/* Accessible focus outline */
+button:focus,
+input:focus {
+  outline: 3px solid #005fcc;
+  outline-offset: 3px;
+}
+
+/* Flashing background when alarm is active */
+.alarm-active {
+  animation: flash 1s infinite alternate;
+}
+
+@keyframes flash {
+  from {
+    background-color: #fff;
+  }
+  to {
+    background-color: #ffcccc;
+  }
 }
